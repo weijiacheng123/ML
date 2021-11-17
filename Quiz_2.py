@@ -16,3 +16,56 @@ Using methods covered in class:
 
 '''
 
+import matplotlib.pylab as plt
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn import datasets
+
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split
+import pandas as pd
+
+train_list = []
+test_list = []
+train = pd.read_csv('gameratings.csv')
+test = pd.read_csv('test_esrb.csv')
+y_train = train.iloc[:,-1]
+x_train = train.iloc[:,1:-1]
+y_test = test.iloc[:,-1]
+x_test = test.iloc[:,1:-1]
+
+
+
+linear_regression = LinearRegression()
+
+linear_regression.fit(X = x_train, y =y_train)
+
+predicted = linear_regression.predict(X = x_test)
+
+expected = y_test
+
+
+df = pd.DataFrame()
+
+df["Expected"] = pd.Series(expected)
+
+df["predicted"] = pd.Series(predicted)
+
+
+print("Wrong predicted pairs")
+wrong = [(p,e) for (p,e) in zip(predicted, expected) if int(p) != e]
+print(wrong)
+import csv
+taget_class = { 1:"Everyone", 2:"Everyone 10+", 3:"Mature", 4:"Teen"}
+with open("mypredictions.csv",'w+',encoding="utf-8") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["title","predictions"])
+    for i in range(500):
+        score = df.predicted[i]
+        if score >= 4:
+            score = 4
+        if score <= 1:
+            score = 1
+        taget = taget_class[int(score)]
+        x = [test.title[i],taget ]
+        writer.writerow(x)
