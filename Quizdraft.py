@@ -1,18 +1,3 @@
-
-
-import matplotlib.pylab as plt
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn import datasets
-
-from sklearn.datasets import load_diabetes
-from sklearn.model_selection import train_test_split
-import pandas as pd
-
-
-from sklearn.neighbors import KNeighborsClassifier
-
-
 import pandas as pd
 from scipy.sparse import data
 from sklearn.neighbors import KNeighborsClassifier
@@ -25,14 +10,14 @@ te = pd.read_csv("test_esrb.csv")
 
 grp = pd.DataFrame(gr)
 tep = pd.DataFrame(te)
-#print(te_tconsole)
 
-#print(tep.iloc[1:33])
+print(grp)
+print(tep)
 
-X_train = grp.iloc[1:1897,1:33]
-y_train = grp.iloc[1:1897,33]
-X_test = tep.iloc[1:1897,1:33]
-y_test = tep.iloc[1:1897,33]
+X_train = grp.iloc[:1894,1:33]
+y_train = grp.iloc[:1894,33]
+X_test = tep.iloc[:502,1:33]
+y_test = tep.iloc[:502,33]
 
 print(X_train.shape)
 print(y_train.shape)
@@ -44,24 +29,22 @@ knn.fit(X=X_train, y=y_train)
 predicted = knn.predict(X=X_test)
 expected = y_test
 
-#print(predicted[:20])
-#print(expected[:20])
+print(predicted)
+print(expected)
 
 wrong = [(p, e) for (p, e) in zip(predicted, expected) if p != e]
-#print(wrong)
-'''
-#print(predicted)
-list1 = predicted.tolist()
-predict_dict = {'target':list1}
-#print(predict_dict)
-predict_dict_df = pd.DataFrame(predict_dict)
-#print(predict_dict_df)
-#print(predict_dict_df.target.values)
-'''
-df = pd.DataFrame(tep.iloc[:,0],predicted)
-#print(predict_dict_df)
+print(wrong)
 
-df.to_csv('MyPredictions.csv')
+
+p_dict = dict(zip(tep.iloc[: ,0], predicted))
+print(p_dict)
+#df = pd.DataFrame.from_dict(p_dict, columns = ['title', 'prediction'])
+df = pd.DataFrame(p_dict.items(), columns=['title', 'prediction'])
+df_reset = df.set_index('title')
+print(df_reset)
+
+
+df_reset.to_csv('MyPredictions.csv')
 
 
 text = open('MyPredictions.csv',"r")
@@ -75,7 +58,3 @@ text = text.replace("4", "Teen")
 x = open('MyPredictions.csv',"w")
 x.writelines(text)
 x.close()
-'''
-df.columns = ['Tile', 'prediction']
-print(df.columns)
-'''

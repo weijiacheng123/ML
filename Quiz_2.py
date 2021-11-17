@@ -20,22 +20,43 @@ import matplotlib.pylab as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn import datasets
+from sklearn.neighbors import KNeighborsClassifier
 
 from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
+'''
+gr = pd.read_csv("gameratings.csv")
+tn = pd.read_csv("target_names.csv")
+te = pd.read_csv("test_esrb.csv")
+
+grp = pd.DataFrame(gr)
+tep = pd.DataFrame(te)
+'''
+
 train_list = []
 test_list = []
 train = pd.read_csv('gameratings.csv')
 test = pd.read_csv('test_esrb.csv')
+target_name = pd.read_csv("target_names.csv")
+
+traindf = pd.DataFrame(train)
+testdf = pd.DataFrame(test)
+
+'''
 y_train = train.iloc[:,-1]
 x_train = train.iloc[:,1:-1]
 y_test = test.iloc[:,-1]
 x_test = test.iloc[:,1:-1]
+'''
+x_train = traindf.iloc[:1894,1:33]
+y_train = traindf.iloc[:1894,33]
+x_test = testdf.iloc[:502,1:33]
+y_test = testdf.iloc[:502,33]
 
 
-
+'''
 linear_regression = LinearRegression()
 
 linear_regression.fit(X = x_train, y =y_train)
@@ -43,14 +64,26 @@ linear_regression.fit(X = x_train, y =y_train)
 predicted = linear_regression.predict(X = x_test)
 
 expected = y_test
+'''
 
 
+knn = KNeighborsClassifier()
+
+knn.fit(X=x_train, y=y_train)
+
+predicted = knn.predict(X=x_test)
+expected = y_test
+
+print(predicted)
+print(expected)
+
+'''
 df = pd.DataFrame()
 
 df["Expected"] = pd.Series(expected)
 
 df["predicted"] = pd.Series(predicted)
-
+'''
 
 print("Wrong predicted pairs")
 wrong = [(p,e) for (p,e) in zip(predicted, expected) if int(p) != e]
@@ -61,7 +94,7 @@ with open("mypredictions.csv",'w+',encoding="utf-8") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(["title","predictions"])
     for i in range(500):
-        score = df.predicted[i]
+        score = predicted[i]
         if score >= 4:
             score = 4
         if score <= 1:
