@@ -69,3 +69,4 @@ with open("mypredictions.csv",'w+',encoding="utf-8") as csvfile:
         taget = taget_class[int(score)]
         x = [test.title[i],taget ]
         writer.writerow(x)
+
