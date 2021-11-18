@@ -43,6 +43,8 @@ target_name = pd.read_csv("target_names.csv")
 
 traindf = pd.DataFrame(train)
 testdf = pd.DataFrame(test)
+print(traindf)
+print(testdf)
 
 '''
 y_train = train.iloc[:,-1]
@@ -55,6 +57,8 @@ y_train = traindf.iloc[:1894,33]
 x_test = testdf.iloc[:502,1:33]
 y_test = testdf.iloc[:502,33]
 
+print(x_train.shape)
+print(y_train.shape)
 
 '''
 linear_regression = LinearRegression()
